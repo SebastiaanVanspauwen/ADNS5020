@@ -1,5 +1,8 @@
 // Source: http://www.wildcircuits.com/2013/03/optical-mouse-hacking.html
 // include the SPI library: 
+
+//Note:  MOSI and MISO connected to eachother!
+
 #include <SPI.h> 
 // setup pins 
 int nReset = 2; //12 (Changed to 9 because using Arduino Nano)
