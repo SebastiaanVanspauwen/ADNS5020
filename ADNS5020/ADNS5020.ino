@@ -24,7 +24,7 @@ void loop()
   //enable ADNS 
   digitalWrite(nReset,HIGH); 
   //startup time 
-  delay(1000); 
+  delay(250); 
   pixel_grab(); 
 }
 void ADNS_write(unsigned int address, unsigned int data){ 
