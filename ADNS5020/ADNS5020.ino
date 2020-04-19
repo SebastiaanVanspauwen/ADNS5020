@@ -1,3 +1,7 @@
+#include <Adafruit_NeoPixel.h>
+#define PIN      6
+#define NUMPIXELS 1
+Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 // Source: http://www.wildcircuits.com/2013/03/optical-mouse-hacking.html
 // include the SPI library: 
 
@@ -9,6 +13,9 @@ int nReset = 2; //12 (Changed to 9 because using Arduino Nano)
 int nCS = 3; 
 void setup(){ 
   //set pin I/O direction 
+  pixels.begin();
+  pixels.setBrightness(255);
+  pixels.clear();
   pinMode (nReset, OUTPUT); 
   pinMode (nCS, OUTPUT); 
   //put the device in reset not chip selected 
@@ -26,9 +33,8 @@ void loop()
 { 
   //enable ADNS 
   digitalWrite(nReset,HIGH); 
-  //startup time 
-  delay(250); 
   pixel_grab(); 
+  delay(150);
 }
 void ADNS_write(unsigned int address, unsigned int data){ 
   // take the CS pin low to select the chip: 
@@ -61,12 +67,31 @@ void pixel_grab(){
   //reset the pixel grab counter 
   ADNS_write(0x0B,0x00);
   Serial.println("");   
-  for (count=0;count < 225; count++){ 
-    if (count%15 == 14){ 
-      Serial.println(String(ADNS_read(0x0B))); 
+  for (count=0;count < 225; count++)
+  { 
+    if (count%15 == 14)
+    { 
+      uint8_t data = ADNS_read(0x0B);
+      if(data  & 0x80)
+      {
+        Serial.println(String(data - 128));
+      }
+      else
+      {
+        count--;
+      }
     } 
-    else{ 
-      Serial.print(String(ADNS_read(0x0B)) + ","); 
+    else
+    { 
+      uint8_t data = ADNS_read(0x0B);
+      if(data  & 0x80 )
+      {
+        Serial.print(String(data - 128) + ",");
+      }
+      else
+      {
+        count--;
+      }
     } 
   } 
   Serial.println(""); 
