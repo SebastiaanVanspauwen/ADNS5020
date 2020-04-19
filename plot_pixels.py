@@ -5,11 +5,11 @@ import numpy as np
 
 plt.ion()
 fig, ax = plt.subplots()
-ser = serial.Serial('COM4', 115200)
+ser = serial.Serial('COM5', 115200)
 index = 0;
 w, h = 15, 15;
-pixel_data = [[0 for x in range(w)] for y in range(h)]
-im = ax.imshow(pixel_data, cmap='gray', vmin=0, vmax=255)
+pixel_data = np.zeros([15,15])
+im = ax.imshow(pixel_data, cmap='gray', vmin=0, vmax=128)
 
 while True:
     # Read raw data
@@ -23,6 +23,7 @@ while True:
         pixel_data[index] = pixel_row_data
         index = index + 1
         if index == 15:
+            np.rot90(pixel_data)
             index = 0;
             im.set_array(pixel_data)
             plt.pause(0.1)
